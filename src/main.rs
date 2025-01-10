@@ -58,6 +58,7 @@ fn split_bundle(bundle: &[u8], path: &Path, output_prefix: &Option<String>) {
 
 fn extract_dns_names(cert: &X509Certificate) -> Vec<String> {
     if let Ok(Some(dns_ext)) = cert.get_extension_unique(&OID_X509_EXT_SUBJECT_ALT_NAME) {
+        // copied from https://docs.rs/x509-parser/latest/src/print_cert/print-cert.rs.html
         match dns_ext.parsed_extension() {
             ParsedExtension::SubjectAlternativeName(san) => {
                 let mut res = vec![];
