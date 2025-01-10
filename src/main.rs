@@ -21,7 +21,7 @@ enum Command {
     },
     /// Print information about each certificate in the bundle
     Info {
-        /// The ca-bundle to split
+        /// The ca-bundle to read
         path: PathBuf,
     },
 
