@@ -21,10 +21,15 @@ enum Command {
     },
     /// Print information about each certificate in the bundle
     Info {
-        /// The ca-bundle to split
+        /// The ca-bundle to read
         path: PathBuf,
     },
+
+    /// Print the version of cert-inspector
+    Version {},
 }
+
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 fn main() {
     let args = Cli::parse();
@@ -51,6 +56,9 @@ fn main() {
                     commands::cert_info(&cert, &mut std::io::stdout()).expect("printing info");
                 }
             }
+        }
+        Command::Version {} => {
+            println!("cert-inspector v{VERSION}");
         }
     }
 }
