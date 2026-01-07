@@ -82,6 +82,7 @@ pub fn cert_info<W: Write>(cert: &CertificateDer, out: &mut W) -> std::io::Resul
     let (_, c) = X509Certificate::from_der(cert.as_ref()).expect("Parsing certificate");
     writeln!(out, "Subject:     {}", c.subject)?;
     writeln!(out, "Issuer:      {}", c.issuer)?;
+    writeln!(out, "Serial:      {}", c.raw_serial_as_string())?;
     writeln!(out, "Not Before:  {}", c.validity.not_before)?;
     writeln!(out, "Not After:   {}", c.validity.not_after)?;
     writeln!(out, "DNS names:   {:?}", extract_dns_names(&c))
@@ -138,12 +139,16 @@ mod tests {
 
         let res = String::from_utf8(out.into_inner()).unwrap();
         let lines = res.trim_end().split("\n").collect::<Vec<&str>>();
-        assert_eq!(lines.len(), 5);
+        assert_eq!(lines.len(), 6);
         assert_eq!(lines[0], "Subject:     CN=Test CA 1");
         assert_eq!(lines[1], "Issuer:      CN=Test CA 1");
-        assert_eq!(lines[2], "Not Before:  Jan 10 13:18:59 2025 +00:00");
-        assert_eq!(lines[3], "Not After:   Jan 10 13:18:59 2026 +00:00");
-        assert_eq!(lines[4], "DNS names:   []");
+        assert_eq!(
+            lines[2],
+            "Serial:      31:36:70:42:98:7e:e7:bf:8a:4d:23:86:c7:b7:0f:53:ed:7c:0d:cf"
+        );
+        assert_eq!(lines[3], "Not Before:  Jan 10 13:18:59 2025 +00:00");
+        assert_eq!(lines[4], "Not After:   Jan 10 13:18:59 2026 +00:00");
+        assert_eq!(lines[5], "DNS names:   []");
     }
 
     #[test]
@@ -157,12 +162,16 @@ mod tests {
 
         let res = String::from_utf8(out.into_inner()).unwrap();
         let lines = res.trim_end().split("\n").collect::<Vec<&str>>();
-        assert_eq!(lines.len(), 5);
+        assert_eq!(lines.len(), 6);
         assert_eq!(lines[0], "Subject:     CN=Test CA 2");
         assert_eq!(lines[1], "Issuer:      CN=Test CA 2");
-        assert_eq!(lines[2], "Not Before:  Jan 10 13:19:00 2025 +00:00");
-        assert_eq!(lines[3], "Not After:   Jan 10 13:19:00 2027 +00:00");
-        assert_eq!(lines[4], "DNS names:   []");
+        assert_eq!(
+            lines[2],
+            "Serial:      4a:34:d4:9f:62:d6:a2:e3:19:ba:53:b8:84:8c:04:17:e2:15:28:01"
+        );
+        assert_eq!(lines[3], "Not Before:  Jan 10 13:19:00 2025 +00:00");
+        assert_eq!(lines[4], "Not After:   Jan 10 13:19:00 2027 +00:00");
+        assert_eq!(lines[5], "DNS names:   []");
     }
 
     #[test]
@@ -176,12 +185,16 @@ mod tests {
 
         let res = String::from_utf8(out.into_inner()).unwrap();
         let lines = res.trim_end().split("\n").collect::<Vec<&str>>();
-        assert_eq!(lines.len(), 5);
+        assert_eq!(lines.len(), 6);
         assert_eq!(lines[0], "Subject:     CN=Test CA 3");
         assert_eq!(lines[1], "Issuer:      CN=Test CA 3");
-        assert_eq!(lines[2], "Not Before:  Jan 10 13:19:00 2025 +00:00");
-        assert_eq!(lines[3], "Not After:   Jan 10 13:19:00 2028 +00:00");
-        assert_eq!(lines[4], "DNS names:   []");
+        assert_eq!(
+            lines[2],
+            "Serial:      4d:7b:ff:9b:8c:e9:85:f1:2b:b4:58:24:96:93:af:c4:41:89:3c:88"
+        );
+        assert_eq!(lines[3], "Not Before:  Jan 10 13:19:00 2025 +00:00");
+        assert_eq!(lines[4], "Not After:   Jan 10 13:19:00 2028 +00:00");
+        assert_eq!(lines[5], "DNS names:   []");
     }
 
     #[test]
@@ -195,12 +208,16 @@ mod tests {
 
         let res = String::from_utf8(out.into_inner()).unwrap();
         let lines = res.trim_end().split("\n").collect::<Vec<&str>>();
-        assert_eq!(lines.len(), 5);
+        assert_eq!(lines.len(), 6);
         assert_eq!(lines[0], "Subject:     CN=Test CA 4");
         assert_eq!(lines[1], "Issuer:      CN=Test CA 4");
-        assert_eq!(lines[2], "Not Before:  Jan 10 13:19:01 2025 +00:00");
-        assert_eq!(lines[3], "Not After:   Jan  9 13:19:01 2029 +00:00");
-        assert_eq!(lines[4], "DNS names:   []");
+        assert_eq!(
+            lines[2],
+            "Serial:      71:bd:87:86:01:73:19:d8:be:b6:00:fd:9f:f8:45:eb:b3:95:f5:bc"
+        );
+        assert_eq!(lines[3], "Not Before:  Jan 10 13:19:01 2025 +00:00");
+        assert_eq!(lines[4], "Not After:   Jan  9 13:19:01 2029 +00:00");
+        assert_eq!(lines[5], "DNS names:   []");
     }
 
     #[test]
@@ -214,11 +231,15 @@ mod tests {
 
         let res = String::from_utf8(out.into_inner()).unwrap();
         let lines = res.trim_end().split("\n").collect::<Vec<&str>>();
-        assert_eq!(lines.len(), 5);
+        assert_eq!(lines.len(), 6);
         assert_eq!(lines[0], "Subject:     CN=Test CA 5");
         assert_eq!(lines[1], "Issuer:      CN=Test CA 5");
-        assert_eq!(lines[2], "Not Before:  Jan 10 13:19:02 2025 +00:00");
-        assert_eq!(lines[3], "Not After:   Jan  9 13:19:02 2030 +00:00");
-        assert_eq!(lines[4], "DNS names:   []");
+        assert_eq!(
+            lines[2],
+            "Serial:      2d:c9:ec:5c:90:b0:6d:5d:b3:83:99:18:59:8d:8c:c8:18:7a:7a:73"
+        );
+        assert_eq!(lines[3], "Not Before:  Jan 10 13:19:02 2025 +00:00");
+        assert_eq!(lines[4], "Not After:   Jan  9 13:19:02 2030 +00:00");
+        assert_eq!(lines[5], "DNS names:   []");
     }
 }
